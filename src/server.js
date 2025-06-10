@@ -8,9 +8,12 @@ app.use(cors());
 app.use(express.json());
 connectDB();
 
+
+app.use("/api/members", require("./routes/MemberRoutes"));
+
 app.get("/", (req, res) => {
   res.send("Servidor backend funcionando 🚀");
-});
+}); 
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
