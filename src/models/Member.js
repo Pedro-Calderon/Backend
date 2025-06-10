@@ -8,7 +8,7 @@ const MemberSchema = new mongoose.Schema({
   apellidos: { 
     type: String,
     required: true },
-  nombreUSer: {
+  nombreUser: {
     type: String,
     required: true, },
   email: {

@@ -39,20 +39,27 @@ const getMemberById = async (req, res) => {
 const addMember = async (req, res) => {
   console.log("📥 Datos recibidos en req.body:", req.body);
 
-  const { nombre, apellidos, nombreUSer, email, password } =
+  const { nombre, apellidos, nombreUser, email, password } =
     req.body;
   try {
     const existingMember = await Member.findOne({ email });
+    const existingMemberUser = await Member.findOne({ email });
     if (existingMember) {
       return res
         .status(410)
         .json({ message: "El correo electrónico ya está registrado" });
     }
+    if (existingMemberUser) {
+      return res
+        .status(412)  
+        .json({ message: "El nombre de usuario ya está registrado" });
+
+    }
     //Nuevo usuario constante
     const newMember = new Member({
       nombre,
       apellidos,
-      nombreUSer,
+      nombreUser,
       email,
       password,
     });
