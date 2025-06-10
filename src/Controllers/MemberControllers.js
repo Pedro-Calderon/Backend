@@ -43,7 +43,7 @@ const addMember = async (req, res) => {
     req.body;
   try {
     const existingMember = await Member.findOne({ email });
-    const existingMemberUser = await Member.findOne({ email });
+    const existingMemberUser = await Member.findOne({ nombreUser });
     if (existingMember) {
       return res
         .status(410)
