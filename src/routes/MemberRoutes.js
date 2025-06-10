@@ -1,9 +1,10 @@
 const express = require('express');
-const { getMembers, addMember, getMemberById } = require('../Controllers/MemberControllers');
+const { getMembers, addMember, getMemberById, loginMember } = require('../Controllers/MemberControllers');
 const router = express.Router();
+const verifyToken = require('../middleware/authMiddleware');
 
-router.get('/', getMembers);
-router.get("/:id", getMemberById);
-router.post('/', addMember);
-
+router.get('/' , verifyToken, getMembers);
+router.get("/:id", verifyToken, getMemberById);
+router.post('/register', addMember);
+router.post('/login', loginMember);
 module.exports = router;

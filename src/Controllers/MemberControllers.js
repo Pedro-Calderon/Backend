@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const axios = require("axios");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 //Peticiones a la api
 
@@ -66,9 +68,53 @@ const addMember = async (req, res) => {
   }
 };
 
+const loginMember = async (req, res) => {
+  console.log("📥 Login recibido en backend:", req.body);
+
+  const { email, password } = req.body;
+
+  try {
+    const member = await Member.findOne({ email });
+    if (!member) {
+      console.log("❌ Usuario no encontrado");
+
+      return res.status(400).json({ message: "Usuario no encontrado" });
+    }
+   
+    const isMatch = await bcrypt.compare(password, member.password);
+    if (!isMatch) {
+      console.log("❌ Contraseña incorrecta");
+
+      return res.status(400).json({ message: "Contraseña incorrecta" });
+    }
+    console.log("✅ Login exitoso:", member.email);
+ 
+      const token = jwt.sign({ userId: member._id }, process.env.JWT_SECRET, {
+      expiresIn: '1d', 
+    });
+
+
+    res.status(200).json({
+      message: "Inicio de sesión exitoso",
+      user: {
+        id: member._id,
+        nombre: member.nombre,
+        apellidos: member.apellidos,
+        email: member.email,
+        nombreUSer: member.nombreUSer,
+      },
+      token, // Enviar el token al cliente
+    });
+  } catch (error) {
+    console.error("🔥 Error inesperado:", error);
+
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   getMembers,
   addMember,
   getMemberById,
+  loginMember,
 };
