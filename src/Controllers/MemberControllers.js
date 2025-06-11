@@ -81,17 +81,17 @@ const loginMember = async (req, res) => {
 
   const { identifier, password } = req.body;
 
- 
-    ;
+
+  ;
   try {
 
 
-   // Si el identifier parece un email
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
-    member = await Member.findOne({ email: identifier });
-  } else {
-    member = await Member.findOne({ nombreUser: identifier });
-  }
+    // Si el identifier parece un email
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+      member = await Member.findOne({ email: identifier });
+    } else {
+      member = await Member.findOne({ nombreUser: identifier });
+    }
 
 
 
@@ -126,7 +126,7 @@ const loginMember = async (req, res) => {
         nombre: member.nombre,
         apellidos: member.apellidos,
         email: member.email,
-        nombreUSer: member.nombreUSer,
+        nombreUser: member.nombreUser,
       },
       token, // Enviar el token al cliente
     });
@@ -144,7 +144,7 @@ const forgotPassword = async (req, res) => {
 
   try {
     const token = crypto.randomBytes(32).toString("hex");
-    const resetLink = `http://localhost:3001/reset-password?token=${token}`;
+    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
 
     console.log("📧 Antes, Intentando enviar correo a:", email);
     console.log("🔗 Enlace generado:", resetLink);
