@@ -170,7 +170,7 @@ const forgotPassword = async (req, res) => {
 
   try {
     const token = crypto.randomBytes(32).toString("hex");
-    const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+    const resetLink = `innova-tube.up.railway.app/reset-password?token=${token}`;
 
     console.log("📧 Antes, Intentando enviar correo a:", email);
     console.log("🔗 Enlace generado:", resetLink);
