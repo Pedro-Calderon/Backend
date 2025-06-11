@@ -51,7 +51,7 @@ const addMember = async (req, res) => {
     }
     if (existingMemberUser) {
       return res
-        .status(412)  
+        .status(412)
         .json({ message: "El nombre de usuario ya está registrado" });
 
     }
@@ -79,17 +79,24 @@ const addMember = async (req, res) => {
 const loginMember = async (req, res) => {
   console.log("📥 Login recibido en backend:", req.body);
 
-  const { email, nombreUSer, password } = req.body;
+  const { identifier, password } = req.body;
 
+ 
+    ;
   try {
- 
-    if (await Member.findOne({ nombreUSer })) {
-      member = await Member.findOne({ nombreUSer });
-    } else if (await Member.findOne({ email })) {
-      member = await Member.findOne({ email });
-    }
- 
 
+
+   // Si el identifier parece un email
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+    member = await Member.findOne({ email: identifier });
+  } else {
+    member = await Member.findOne({ nombreUser: identifier });
+  }
+
+
+
+
+    console.log("📥 Miembro encontrado:", member);
 
     if (!member) {
       console.log("❌ Usuario no encontrado");
@@ -101,9 +108,11 @@ const loginMember = async (req, res) => {
     if (!isMatch) {
       console.log("❌ Contraseña incorrecta");
 
-      return res.status(400).json({ message: "Contraseña incorrecta" });
+      return res
+        .status(420)
+        .json({ message: "Contraseña incorrecta" });
     }
-    //console.log("✅ Login exitoso:", member.email);
+    console.log("✅ Login exitoso:", member.email);
 
     const token = jwt.sign({ userId: member._id }, process.env.JWT_SECRET, {
       expiresIn: '1d',
