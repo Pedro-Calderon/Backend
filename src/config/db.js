@@ -4,10 +4,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI,{
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGODB_URI)
     console.log('✅ MongoDB conectado');
   } catch (error) {
     console.error('❌ Error conectando a MongoDB:', error);
