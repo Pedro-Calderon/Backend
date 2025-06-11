@@ -10,6 +10,7 @@ connectDB();
 
 
 app.use("/api/members", require("./routes/MemberRoutes"));
+app.use("/api/favorite", require("./routes/FavoriteRoutes"));
 
 app.get("/", (req, res) => {
   res.send("Servidor backend funcionando 🚀");
