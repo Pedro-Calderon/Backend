@@ -39,9 +39,35 @@ const getMemberById = async (req, res) => {
 const addMember = async (req, res) => {
   console.log("📥 Datos recibidos en req.body:", req.body);
 
-  const { nombre, apellidos, nombreUser, email, password } =
+  const { nombre, apellidos, nombreUser, email, password, captchaToken } =
     req.body;
+
+
+
+  if (!captchaToken) {
+    return res.status(430).json({ message: "No se proporcionó el token de reCAPTCHA" });
+  }
   try {
+
+    const googleRes = await axios.post(
+      "https://www.google.com/recaptcha/api/siteverify",
+      null,
+      {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: captchaToken,
+        },
+      }
+    );
+
+
+    const { success, score } = googleRes.data;
+
+    if (!success || (score !== undefined && score < 0.5)) {
+      return res.status(403).json({ message: "Falló la verificación de reCAPTCHA" });
+    }
+
+
     const existingMember = await Member.findOne({ email });
     const existingMemberUser = await Member.findOne({ nombreUser });
     if (existingMember) {
